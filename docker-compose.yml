@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: vision-waha
+    restart: always
+    environment:
+      - WAHA_API_KEY=vision123
+      - WAHA_WEBHOOK_URL=http://webhook:5678/webhook/whatsapp
+      - WAHA_MULTI_DEVICE=true
+    volumes:
+      - ./waha:/app/data
+    ports:
+      - "3000:3000"
+
+  webhook:
+    build: ./webhook
+    container_name: vision-webhook
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./webhook:/app
