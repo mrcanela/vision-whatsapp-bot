@@ -1,11 +1,11 @@
-version: "3.8"
-
 services:
   waha:
     image: devlikeapro/waha:latest
     container_name: vision-waha
     restart: always
     environment:
+      - WAHA_USERNAME=admin
+      - WAHA_PASSWORD=admin
       - WAHA_API_KEY=vision123
       - WAHA_WEBHOOK_URL=http://webhook:5678/webhook/whatsapp
       - WAHA_MULTI_DEVICE=true
