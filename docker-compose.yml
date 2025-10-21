@@ -3,14 +3,13 @@ services:
     image: devlikeapro/waha:latest
     container_name: vision-waha
     restart: always
+    env_file:
+      - ./waha/.env
     environment:
-      - WAHA_USERNAME=admin
-      - WAHA_PASSWORD=admin
-      - WAHA_API_KEY=vision123
-      - WAHA_WEBHOOK_URL=http://webhook:5678/webhook/whatsapp
+      - WAHA_WEBHOOK_URL=http://n8n:5679/webhook/whatsapp
       - WAHA_MULTI_DEVICE=true
     volumes:
-      - ./waha:/app/data
+      - ./waha/data:/app/data
     ports:
       - "3000:3000"
 
@@ -22,3 +21,19 @@ services:
       - "5678:5678"
     volumes:
       - ./webhook:/app
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: vision-n8n
+    restart: always
+    environment:
+      - N8N_HOST=n8n.local
+      - N8N_PORT=5679
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://n8n:5679/
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - N8N_EDITOR_BASE_URL=http://localhost:5679
+    ports:
+      - "5679:5679"
+    volumes:
+      - ./n8n:/home/node/.n8n
