@@ -1,0 +1,32 @@
+{
+  "parameters": {
+    "authentication": "none",
+    "url": "http://vision-waha:3000/api/sendText",
+    "method": "POST",
+    "sendHeaders": true,
+    "headerParameters": {
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-api-key",
+          "value": "vision123"
+        }
+      ]
+    },
+    "sendBody": true,
+    "bodyContentType": "json",
+    "specifyBody": "json",
+    "jsonBody": "{\n  \"session\": \"default\",\n  \"chatId\": \"={{$('Webhook').item.json.body.payload.from}}\",\n  \"text\": \"👋 *Seja bem-vindo(a) ao Controles Operacionais!*\\n\\nPor favor, me diga o que deseja:\\n\\n1️⃣ *Solicitação de Veículo*\\n2️⃣ *Solicitação de Manutenção*\\n3️⃣ *Solicitação de Suporte ao Sistema*\\n4️⃣ *Informar KM*\"\n}"
+  },
+  "name": "Enviar Boas-Vindas",
+  "type": "n8n-nodes-base.httpRequest",
+  "typeVersion": 1,
+  "position": [
+    880,
+    300
+  ],
+  "notes": "Envia automaticamente o menu de boas-vindas quando uma mensagem chega via WAHA (sessão 'default')."
+}

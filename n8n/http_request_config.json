@@ -1,0 +1,36 @@
+{
+    "parameters": {
+        "method": "POST",
+        "url": "http://vision-waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+            "parameters": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "x-api-key",
+                    "value": "vision123"
+                }
+            ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+            "parameters": [
+                {
+                    "name": "session",
+                    "value": "default"
+                },
+                {
+                    "name": "chatId",
+                    "value": "={{$('Webhook').item.json.body.payload.from}}"
+                },
+                {
+                    "name": "text",
+                    "value": "👋 *Seja bem-vindo(a) ao Controles Operacionais!*\n\nPor favor, me diga o que deseja:\n\n1️⃣ *Solicitação de Veículo*\n2️⃣ *Solicitação de Manutenção*\n3️⃣ *Solicitação de Suporte ao Sistema*\n4️⃣ *Informar KM*"
+                }
+            ]
+        }
+    }
+}

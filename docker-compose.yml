@@ -1,28 +1,38 @@
+version: "3.8"
+
 services:
-  waha:
+  # ==========================
+  # 🚀 WAHA - WhatsApp HTTP API
+  # ==========================
+  vision-waha:
     image: devlikeapro/waha:latest
     container_name: vision-waha
     restart: always
-    env_file:
-      - ./waha/.env
     environment:
-      - WAHA_WEBHOOK_URL=http://n8n:5679/webhook/whatsapp
+      - WAHA_API_KEY=vision123
+      - WAHA_DASHBOARD_USERNAME=admin
+      - WAHA_DASHBOARD_PASSWORD=admin123
+      - WHATSAPP_SWAGGER_USERNAME=admin
+      - WHATSAPP_SWAGGER_PASSWORD=admin123
+      - WAHA_WEBHOOK_URL=http://vision-n8n:5679/webhook/whatsapp
+      - WAHA_WEBHOOK_HEADERS={"x-api-key":"vision123","Content-Type":"application/json"}
       - WAHA_MULTI_DEVICE=true
-    volumes:
-      - ./waha/data:/app/data
+      - WAHA_CHROMIUM_PATH=/usr/bin/chromium
+      - WAHA_BROWSER_WS=true
+      - WAHA_WORKERS=1
+      - WAHA_WORKER_TIMEOUT=120000
+      - WAHA_AUTO_RESTART=true              # 🔄 garante reconexão automática se o WhatsApp cair
     ports:
       - "3000:3000"
-
-  webhook:
-    build: ./webhook
-    container_name: vision-webhook
-    restart: always
-    ports:
-      - "5678:5678"
     volumes:
-      - ./webhook:/app
+      - ./waha:/app/data                    # persistência dos dados da sessão (não perder login)
+    networks:
+      - vision-net                          # adiciona à rede compartilhada
 
-  n8n:
+  # ==========================
+  # ⚙️ n8n - Automação de Fluxos
+  # ==========================
+  vision-n8n:
     image: n8nio/n8n:latest
     container_name: vision-n8n
     restart: always
@@ -30,10 +40,33 @@ services:
       - N8N_HOST=n8n.local
       - N8N_PORT=5679
       - N8N_PROTOCOL=http
-      - WEBHOOK_URL=http://n8n:5679/
+      - WEBHOOK_URL=http://vision-n8n:5679/
       - GENERIC_TIMEZONE=America/Sao_Paulo
       - N8N_EDITOR_BASE_URL=http://localhost:5679
     ports:
       - "5679:5679"
     volumes:
       - ./n8n:/home/node/.n8n
+    networks:
+      - vision-net                          # adiciona à mesma rede
+
+  # ==========================
+  # 🌐 Webhook Python auxiliar
+  # ==========================
+  vision-webhook:
+    build: ./webhook
+    container_name: vision-webhook
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./webhook:/app
+    networks:
+      - vision-net                          # também na mesma rede (opcional)
+
+# ==========================
+# 🔗 Rede compartilhada entre todos
+# ==========================
+networks:
+  vision-net:
+    driver: bridge
